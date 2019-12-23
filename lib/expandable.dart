@@ -77,7 +77,8 @@ class ExpandableThemeData {
     this.iconPlacement,
   });
 
-  static ExpandableThemeData combine(ExpandableThemeData theme, ExpandableThemeData defaults) {
+  static ExpandableThemeData combine(
+      ExpandableThemeData theme, ExpandableThemeData defaults) {
     if (defaults == null || defaults.isEmpty()) {
       return theme ?? empty;
     } else if (theme == null || theme.isEmpty()) {
@@ -88,8 +89,10 @@ class ExpandableThemeData {
       return ExpandableThemeData(
         iconColor: theme.iconColor ?? defaults.iconColor,
         useInkWell: theme.useInkWell ?? defaults.useInkWell,
-        animationDuration: theme.animationDuration ?? defaults.animationDuration,
-        scrollAnimationDuration: theme.scrollAnimationDuration ?? defaults.scrollAnimationDuration,
+        animationDuration:
+            theme.animationDuration ?? defaults.animationDuration,
+        scrollAnimationDuration:
+            theme.scrollAnimationDuration ?? defaults.scrollAnimationDuration,
         crossFadePoint: theme.crossFadePoint ?? defaults.crossFadePoint,
         fadeCurve: theme.fadeCurve ?? defaults.fadeCurve,
         sizeCurve: theme.sizeCurve ?? defaults.sizeCurve,
@@ -101,13 +104,15 @@ class ExpandableThemeData {
   }
 
   // ignore: deprecated_member_use_from_same_package
-  double get collapsedFadeStart => crossFadePoint < 0.5 ? 0 : (crossFadePoint * 2 - 1);
+  double get collapsedFadeStart =>
+      crossFadePoint < 0.5 ? 0 : (crossFadePoint * 2 - 1);
 
   // ignore: deprecated_member_use_from_same_package
   double get collapsedFadeEnd => crossFadePoint < 0.5 ? 2 * crossFadePoint : 1;
 
   // ignore: deprecated_member_use_from_same_package
-  double get expandedFadeStart => crossFadePoint < 0.5 ? 0 : (crossFadePoint * 2 - 1);
+  double get expandedFadeStart =>
+      crossFadePoint < 0.5 ? 0 : (crossFadePoint * 2 - 1);
 
   // ignore: deprecated_member_use_from_same_package
   double get expandedFadeEnd => crossFadePoint < 0.5 ? 2 * crossFadePoint : 1;
@@ -142,18 +147,23 @@ class ExpandableThemeData {
         this.iconPlacement != null;
   }
 
-  static ExpandableThemeData of(BuildContext context, {bool rebuildOnChange = true}) {
+  static ExpandableThemeData of(BuildContext context,
+      {bool rebuildOnChange = true}) {
     final notifier = rebuildOnChange
         ? context.dependOnInheritedWidgetOfExactType<_ExpandableThemeNotifier>()
         : context.findAncestorWidgetOfExactType<_ExpandableThemeNotifier>();
     return notifier?.themeData ?? defaults;
   }
 
-  static ExpandableThemeData withDefaults(ExpandableThemeData theme, BuildContext context, {bool rebuildOnChange = true}) {
+  static ExpandableThemeData withDefaults(
+      ExpandableThemeData theme, BuildContext context,
+      {bool rebuildOnChange = true}) {
     if (theme != null && theme.isFull()) {
       return theme;
     } else {
-      return combine(combine(theme, of(context, rebuildOnChange: rebuildOnChange)), defaults);
+      return combine(
+          combine(theme, of(context, rebuildOnChange: rebuildOnChange)),
+          defaults);
     }
   }
 }
@@ -166,7 +176,8 @@ class ExpandableTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _ExpandableThemeNotifier n = context.dependOnInheritedWidgetOfExactType<_ExpandableThemeNotifier>();
+    _ExpandableThemeNotifier n =
+        context.dependOnInheritedWidgetOfExactType<_ExpandableThemeNotifier>();
     return _ExpandableThemeNotifier(
       themeData: ExpandableThemeData.combine(data, n?.themeData),
       child: this.child,
@@ -209,15 +220,15 @@ class _ExpandableNotifierState extends State<ExpandableNotifier> {
   @override
   void initState() {
     super.initState();
-    if (widget.controller == null) {
-      controller = widget.controller ?? ExpandableController(initialExpanded: widget.initialExpanded ?? false);
-    }
+    controller = widget.controller ??
+        ExpandableController(initialExpanded: widget.initialExpanded ?? false);
   }
 
   @override
   void didUpdateWidget(ExpandableNotifier oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller && widget.controller != null) {
+    if (widget.controller != oldWidget.controller &&
+        widget.controller != null) {
       setState(() {
         controller = widget.controller;
       });
@@ -226,15 +237,21 @@ class _ExpandableNotifierState extends State<ExpandableNotifier> {
 
   @override
   Widget build(BuildContext context) {
-    final cn = _ExpandableControllerNotifier(controller: controller, child: widget.child);
-    return theme != null ? _ExpandableThemeNotifier(themeData: theme, child: cn) : cn;
+    final cn = _ExpandableControllerNotifier(
+        controller: controller, child: widget.child);
+    return theme != null
+        ? _ExpandableThemeNotifier(themeData: theme, child: cn)
+        : cn;
   }
 }
 
 /// Makes an [ExpandableController] available to the widget subtree.
 /// Useful for making multiple [Expandable] widgets synchronized with a single controller.
-class _ExpandableControllerNotifier extends InheritedNotifier<ExpandableController> {
-  _ExpandableControllerNotifier({@required ExpandableController controller, @required Widget child}) : super(notifier: controller, child: child);
+class _ExpandableControllerNotifier
+    extends InheritedNotifier<ExpandableController> {
+  _ExpandableControllerNotifier(
+      {@required ExpandableController controller, @required Widget child})
+      : super(notifier: controller, child: child);
 }
 
 /// Makes an [ExpandableController] available to the widget subtree.
@@ -242,11 +259,13 @@ class _ExpandableControllerNotifier extends InheritedNotifier<ExpandableControll
 class _ExpandableThemeNotifier extends InheritedWidget {
   final ExpandableThemeData themeData;
 
-  _ExpandableThemeNotifier({@required this.themeData, @required Widget child}) : super(child: child);
+  _ExpandableThemeNotifier({@required this.themeData, @required Widget child})
+      : super(child: child);
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) {
-    return !(oldWidget is _ExpandableThemeNotifier && oldWidget.themeData == themeData);
+    return !(oldWidget is _ExpandableThemeNotifier &&
+        oldWidget.themeData == themeData);
   }
 }
 
@@ -279,10 +298,13 @@ class ExpandableController extends ValueNotifier<bool> {
     expanded = !expanded;
   }
 
-  static ExpandableController of(BuildContext context, {bool rebuildOnChange = true}) {
+  static ExpandableController of(BuildContext context,
+      {bool rebuildOnChange = true}) {
     final notifier = rebuildOnChange
-        ? context.dependOnInheritedWidgetOfExactType<_ExpandableControllerNotifier>()
-        : context.findAncestorWidgetOfExactType<_ExpandableControllerNotifier>();
+        ? context
+            .dependOnInheritedWidgetOfExactType<_ExpandableControllerNotifier>()
+        : context
+            .findAncestorWidgetOfExactType<_ExpandableControllerNotifier>();
     return notifier?.notifier;
   }
 }
@@ -313,7 +335,12 @@ class Expandable extends StatelessWidget {
     @deprecated AlignmentGeometry alignment,
     // ignore: deprecated_member_use_from_same_package
   })  : _theme = ExpandableThemeData.combine(
-                ExpandableThemeData(crossFadePoint: crossFadePoint, fadeCurve: fadeCurve, sizeCurve: sizeCurve, alignment: alignment), theme)
+                ExpandableThemeData(
+                    crossFadePoint: crossFadePoint,
+                    fadeCurve: fadeCurve,
+                    sizeCurve: sizeCurve,
+                    alignment: alignment),
+                theme)
             .nullIfEmpty(),
         super(key: key);
 
@@ -326,16 +353,21 @@ class Expandable extends StatelessWidget {
       alignment: theme.alignment,
       firstChild: collapsed ?? Container(),
       secondChild: expanded ?? Container(),
-      firstCurve: Interval(theme.collapsedFadeStart, theme.collapsedFadeEnd, curve: theme.fadeCurve),
-      secondCurve: Interval(theme.expandedFadeStart, theme.expandedFadeEnd, curve: theme.fadeCurve),
+      firstCurve: Interval(theme.collapsedFadeStart, theme.collapsedFadeEnd,
+          curve: theme.fadeCurve),
+      secondCurve: Interval(theme.expandedFadeStart, theme.expandedFadeEnd,
+          curve: theme.fadeCurve),
       sizeCurve: theme.sizeCurve,
-      crossFadeState: controller.expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      crossFadeState: controller.expanded
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
       duration: controller._animationDuration ?? theme.animationDuration,
     );
   }
 }
 
-typedef Widget ExpandableBuilder(BuildContext context, Widget collapsed, Widget expanded);
+typedef Widget ExpandableBuilder(
+    BuildContext context, Widget collapsed, Widget expanded);
 
 /// Determines the placement of the expand/collapse icon in [ExpandablePanel]
 enum ExpandablePanelIconPlacement {
@@ -406,7 +438,11 @@ class ExpandablePanel extends StatelessWidget {
 
     // ignore: deprecated_member_use_from_same_package
   })  : _theme = ExpandableThemeData.combine(
-                ExpandableThemeData(iconPlacement: iconPlacement, iconColor: iconColor, headerAlignment: headerAlignment), theme)
+                ExpandableThemeData(
+                    iconPlacement: iconPlacement,
+                    iconColor: iconColor,
+                    headerAlignment: headerAlignment),
+                theme)
             .nullIfEmpty(),
         super(key: key);
 
@@ -442,7 +478,9 @@ class ExpandablePanel extends StatelessWidget {
         ];
         return Row(
           crossAxisAlignment: calculateHeaderCrossAxisAlignment(),
-          children: theme.iconPlacement == ExpandablePanelIconPlacement.right ? rowChildren : rowChildren.reversed.toList(),
+          children: theme.iconPlacement == ExpandablePanelIconPlacement.right
+              ? rowChildren
+              : rowChildren.reversed.toList(),
         );
       }
     }
@@ -480,7 +518,8 @@ class ExpandablePanel extends StatelessWidget {
       return buildHeaderRow(buildExpandable());
     }
 
-    final panel = this.header != null ? buildWithHeader() : buildWithoutHeader();
+    final panel =
+        this.header != null ? buildWithHeader() : buildWithoutHeader();
 
     if (controller != null) {
       return ExpandableNotifier(
@@ -488,7 +527,8 @@ class ExpandablePanel extends StatelessWidget {
         child: panel,
       );
     } else {
-      final controller = ExpandableController.of(context, rebuildOnChange: false);
+      final controller =
+          ExpandableController.of(context, rebuildOnChange: false);
       if (controller == null) {
         return ExpandableNotifier(
           child: panel,
@@ -509,7 +549,10 @@ class ExpandableIcon extends StatelessWidget {
     @deprecated Color color,
     ExpandableThemeData theme,
     // ignore: deprecated_member_use_from_same_package
-  }) : _theme = ExpandableThemeData.combine(color != null ? ExpandableThemeData(iconColor: color) : null, theme).nullIfEmpty();
+  }) : _theme = ExpandableThemeData.combine(
+                color != null ? ExpandableThemeData(iconColor: color) : null,
+                theme)
+            .nullIfEmpty();
 
   @override
   Widget build(BuildContext context) {
@@ -572,7 +615,10 @@ class ScrollOnExpand extends StatefulWidget {
     ExpandableThemeData theme,
     @deprecated Duration scrollAnimationDuration,
     // ignore: deprecated_member_use_from_same_package
-  })  : _theme = scrollAnimationDuration != null ? ExpandableThemeData(scrollAnimationDuration: scrollAnimationDuration) : null,
+  })  : _theme = scrollAnimationDuration != null
+            ? ExpandableThemeData(
+                scrollAnimationDuration: scrollAnimationDuration)
+            : null,
         super(key: key);
 
   @override
@@ -595,7 +641,8 @@ class _ScrollOnExpandState extends State<ScrollOnExpand> {
   @override
   void didUpdateWidget(ScrollOnExpand oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final newController = ExpandableController.of(context, rebuildOnChange: false);
+    final newController =
+        ExpandableController.of(context, rebuildOnChange: false);
     if (newController != _controller) {
       _controller.removeListener(_expandedStateChanged);
       _controller = newController;
@@ -612,8 +659,11 @@ class _ScrollOnExpandState extends State<ScrollOnExpand> {
   _animationComplete() {
     _isAnimating--;
     if (_isAnimating == 0 && _lastContext != null && mounted) {
-      if ((_controller.expanded && widget.scrollOnExpand) || (!_controller.expanded && widget.scrollOnCollapse)) {
-        _lastContext?.findRenderObject()?.showOnScreen(duration: _theme.scrollAnimationDuration);
+      if ((_controller.expanded && widget.scrollOnExpand) ||
+          (!_controller.expanded && widget.scrollOnCollapse)) {
+        _lastContext
+            ?.findRenderObject()
+            ?.showOnScreen(duration: _theme.scrollAnimationDuration);
       }
     }
   }
@@ -621,7 +671,9 @@ class _ScrollOnExpandState extends State<ScrollOnExpand> {
   _expandedStateChanged() {
     if (_theme != null) {
       _isAnimating++;
-      Future.delayed(_theme.scrollAnimationDuration + Duration(milliseconds: 10), _animationComplete);
+      Future.delayed(
+          _theme.scrollAnimationDuration + Duration(milliseconds: 10),
+          _animationComplete);
     }
   }
 
